@@ -20,55 +20,65 @@
 /*******************************************************************************/
 #include "MotorDriver.h"
 
-void MotorDriver::init()
-{
-	pinMode(MOTORSHIELD_IN1,OUTPUT);
-	pinMode(MOTORSHIELD_IN2,OUTPUT);
-	pinMode(MOTORSHIELD_IN3,OUTPUT);
-	pinMode(MOTORSHIELD_IN4,OUTPUT);
-	pinMode(SPEEDPIN_A,OUTPUT);
-	pinMode(SPEEDPIN_B,OUTPUT);
+void MotorDriver::init() {
+	pinMode(MOTORSHIELD_IN1, OUTPUT);
+	pinMode(MOTORSHIELD_IN2, OUTPUT);
+	pinMode(MOTORSHIELD_IN3, OUTPUT);
+	pinMode(MOTORSHIELD_IN4, OUTPUT);
+	pinMode(SPEEDPIN_A, OUTPUT);
+	pinMode(SPEEDPIN_B, OUTPUT);
 	stop();
 	/*Configure the motor A to control the wheel at the left side.*/
-	configure(MOTOR_POSITION_LEFT,MOTORA);
+	configure(MOTOR_POSITION_LEFT, MOTORA);
 	/*Configure the motor B to control the wheel at the right side.*/
-	configure(MOTOR_POSITION_RIGHT,MOTORB);
-	setSpeed(255,MOTORA);
-	setSpeed(127,MOTORB);
-	setDirection(MOTOR_ANTICLOCKWISE,MOTORA);
-	setDirection(MOTOR_CLOCKWISE,MOTORB);
-}
-void MotorDriver::configure(uint8_t position, uint8_t motorID)
-{
-	if(motorID == MOTORA)motorA.position = position;
-	else motorB.position = position;
+	configure(MOTOR_POSITION_RIGHT, MOTORB);
+	setSpeed(255, MOTORA);
+	setSpeed(255, MOTORB);
+	setDirection(MOTOR_ANTICLOCKWISE, MOTORA);
+	setDirection(MOTOR_CLOCKWISE, MOTORB);
 }
 
-void MotorDriver::setSpeed(int8_t speed, uint8_t motorID)
-{
-	if(motorID == MOTORA) motorA.speed = speed;
-	else if(motorID == MOTORB) motorB.speed = speed;
+void MotorDriver::configure(uint8_t position, uint8_t motorID) {
+	if(motorID == MOTORA) {
+        motorA.position = position;
+    }
+	else {
+        motorB.position = position;
+    }
 }
-void MotorDriver::setDirection(uint8_t direction, uint8_t motorID)
-{
-	if(motorID == MOTORA)motorA.direction= direction;
-	else if(motorID == MOTORB)motorB.direction = direction;
+
+void MotorDriver::setSpeed(int8_t speed, uint8_t motorID) {
+	if(motorID == MOTORA) {
+        motorA.speed = speed;
+    }
+	else if(motorID == MOTORB) {
+        motorB.speed = speed;
+    }
 }
+
+void MotorDriver::setDirection(uint8_t direction, uint8_t motorID) {
+	if(motorID == MOTORA){
+        motorA.direction = direction;
+    }
+	else if(motorID == MOTORB) {
+        motorB.direction = direction;
+    }
+}
+
 /**********************************************************************/
-/*Function: Get the motor rotate                                  	  */
+/*Function: Get the motor rotatingdd                                  	  */
 /*Parameter:-uint8_t direction,Clockwise or anticlockwise;            */
 /*          -uint8_t motor_position,MOTOR_POSITION_LEFT or			  */
 /*			MOTOR_POSITION_RIGHT;                      				  */
 /*Return:	void                      							      */
-void MotorDriver::rotate(uint8_t direction, uint8_t motor_position)
-{
+void MotorDriver::rotate(uint8_t direction, uint8_t motor_position) {
 	if(motor_position == motorA.position)
 	{
-		rotateWithID(direction,MOTORA);
+		rotateWithID(direction, MOTORA);
 	}
 	if(motor_position == motorB.position)
 	{
-		rotateWithID(direction,MOTORB);
+		rotateWithID(direction, MOTORB);
 	}
 }
 /**********************************************************************/
@@ -76,65 +86,54 @@ void MotorDriver::rotate(uint8_t direction, uint8_t motor_position)
 /*Parameter:-uint8_t direction,Clockwise or anticlockwise;            */
 /*          -uint8_t motor_position,MOTORA or MOTORB				  */
 /*Return:	void                      							      */
-void MotorDriver::rotateWithID(uint8_t direction, uint8_t motorID)
-{
-	uint8_t in1_level,in2_level;
-	if(MOTOR_CLOCKWISE == direction)
-	{
+void MotorDriver::rotateWithID(uint8_t direction, uint8_t motorID) {
+	uint8_t in1_level, in2_level;
+	if(direction == MOTOR_CLOCKWISE) {
 		in1_level = LOW;
 		in2_level = HIGH;
 	}
-	else 
-	{
+	else {
 		in1_level = HIGH;
 		in2_level = LOW;
 	}
-	if(motorID == MOTORA)
-	{
-		analogWrite(SPEEDPIN_A,motorA.speed);
-		digitalWrite(MOTORSHIELD_IN1,in1_level);
-     	digitalWrite(MOTORSHIELD_IN2,in2_level);
+	if(motorID == MOTORA) {
+		analogWrite(SPEEDPIN_A, motorA.speed);
+		digitalWrite(MOTORSHIELD_IN1, in1_level);
+     	digitalWrite(MOTORSHIELD_IN2, in2_level);
 	}
-	else if(motorID == MOTORB)
-	{
+	else if(motorID == MOTORB) {
 		analogWrite(SPEEDPIN_B,motorB.speed);
-		digitalWrite(MOTORSHIELD_IN3,in1_level);
-     	digitalWrite(MOTORSHIELD_IN4,in2_level);
+		digitalWrite(MOTORSHIELD_IN3, in1_level);
+     	digitalWrite(MOTORSHIELD_IN4, in2_level);
 	}
 }
 
-void MotorDriver::goForward()
-{
+void MotorDriver::goForward() {
 	rotate(MOTOR_ANTICLOCKWISE,MOTOR_POSITION_LEFT);
 	rotate(MOTOR_CLOCKWISE,MOTOR_POSITION_RIGHT);
 }
-void MotorDriver::goBackward()
-{
+void MotorDriver::goBackward() {
 	rotate(MOTOR_ANTICLOCKWISE,MOTOR_POSITION_RIGHT);
 	rotate(MOTOR_CLOCKWISE,MOTOR_POSITION_LEFT);
 }
-void MotorDriver::goLeft()
-{
+void MotorDriver::goLeft() {
 	rotate(MOTOR_CLOCKWISE,MOTOR_POSITION_RIGHT);
 	rotate(MOTOR_CLOCKWISE,MOTOR_POSITION_LEFT);
 }
-void MotorDriver::goRight()
-{
+void MotorDriver::goRight() {
 	rotate(MOTOR_ANTICLOCKWISE,MOTOR_POSITION_RIGHT);
 	rotate(MOTOR_ANTICLOCKWISE,MOTOR_POSITION_LEFT);
 }
 
 /*************************************************************/
-void MotorDriver::stop()
-{
+void MotorDriver::stop() {
 	/*Unenble the pin, to stop the motor. */
 	digitalWrite(SPEEDPIN_A,LOW);
     digitalWrite(SPEEDPIN_B,LOW);
 }
 
 /*************************************************************/
-void MotorDriver::stop(uint8_t motorID)
-{
+void MotorDriver::stop(uint8_t motorID) {
 	if(motorID == MOTORA)digitalWrite(SPEEDPIN_A,LOW);
 	else if(motorID == MOTORB)digitalWrite(SPEEDPIN_B,LOW);
 }
