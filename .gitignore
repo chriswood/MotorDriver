@@ -1,0 +1,4 @@
+examples
+keywords.txt
+*.o
+*.out

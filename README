@@ -1,0 +1,30 @@
+This is a fork of the seeed studio code found here...
+
+http://www.seeedstudio.com/wiki/File:MotorDriver20121210.zip
+
+I am changing a few things around and removing some stuff, so this
+will no longer function with the given examples. Hence their removal from 
+this repository. If you install this you may want to give it another name
+when you clone it, to avoid overwriting your original seeed drivers. I
+left the name the same to be sure and let everyone know where the code came
+from.
+
+In case you are having trouble with getting the shield drivers to work, here
+is what I did to install them...
+
+1) Clone (or download the zip for the original drivers) the repository
+ somewhere on your system...
+
+git clone https://github.com/chriswood/MotorDriver MotorDriver_new
+
+2) copy the ENTIRE folder under your libraries directory, in the arduino
+   folder you have your sketchbook etc in. Or if you are using the arduino IDE
+   you can just go to the libraries menu, click add a library, point it to this
+   folder, and you are done.
+
+3) Either use the "add library" tool in the arduino IDE, or just put this at
+   the top of your sketch...
+   #include "MotorDriver.h"
+
+4) When you upload this to your arduino a new version should be compiled, but
+   to be sure I would again name this something different.
