@@ -14,8 +14,8 @@
 
 #define MOTOR_POSITION_LEFT  0
 #define MOTOR_POSITION_RIGHT 1
-#define MOTOR_CLOCKWISE      0
-#define MOTOR_ANTICLOCKWISE  1
+#define CLOCKWISE      0
+#define COUNTER_CLOCKWISE  1
 
 #define USE_DC_MOTOR		0
 
@@ -23,7 +23,6 @@ struct MotorStruct
 {
 	int8_t speed;
 	uint8_t direction;
-	uint8_t position;
 };
 /**Class for Motor Shield**/
 class MotorDriver
@@ -32,17 +31,10 @@ class MotorDriver
 	MotorStruct motorB;
 public:
 	void init();
-	void configure(uint8_t position, uint8_t motorID);
+	void forward();
 	void setSpeed(int8_t speed, uint8_t motorID);
-	void setDirection(uint8_t direction, uint8_t motorID);
-	void rotate(uint8_t direction, uint8_t motor_position);
-	void rotateWithID(uint8_t direction, uint8_t motorID);
-	void goForward();
-	void goBackward();
-	void goLeft();
-	void goRight();
+	void rotate(uint8_t direction, uint8_t motorID);
 	void stop();
-	void stop(uint8_t motorID);
 };
 extern MotorDriver motordriver;
 

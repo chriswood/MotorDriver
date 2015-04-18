@@ -1,22 +1,5 @@
-//  Author:Frankie.Chu
-//  Date:20 November, 2012
-//
-//  This library is free software; you can redistribute it and/or
-//  modify it under the terms of the GNU Lesser General Public
-//  License as published by the Free Software Foundation; either
-//  version 2.1 of the License, or (at your option) any later version.
-//
-//  This library is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-//  Lesser General Public License for more details.
-//
-//  You should have received a copy of the GNU Lesser General Public
-//  License along with this library; if not, write to the Free Software
-//  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-//
-//  Modified record:
-//
+/* This is a much condensed version of the older driver.
+   Chris Wood, April 17, 2015
 /*******************************************************************************/
 #include "MotorDriver.h"
 
@@ -28,23 +11,22 @@ void MotorDriver::init() {
 	pinMode(SPEEDPIN_A, OUTPUT);
 	pinMode(SPEEDPIN_B, OUTPUT);
 	stop();
-	/*Configure the motor A to control the wheel at the left side.*/
-	configure(MOTOR_POSITION_LEFT, MOTORA);
-	/*Configure the motor B to control the wheel at the right side.*/
-	configure(MOTOR_POSITION_RIGHT, MOTORB);
 	setSpeed(255, MOTORA);
 	setSpeed(255, MOTORB);
-	setDirection(MOTOR_ANTICLOCKWISE, MOTORA);
-	setDirection(MOTOR_CLOCKWISE, MOTORB);
 }
 
-void MotorDriver::configure(uint8_t position, uint8_t motorID) {
+int _getSpeedPin(uint8_t motorID) {
 	if(motorID == MOTORA) {
-        motorA.position = position;
-    }
+		return(SPEEDPIN_A);
+	}
 	else {
-        motorB.position = position;
-    }
+		return(SPEEDPIN_B);
+	}
+}
+
+void MotorDriver::forward() {
+    rotate(COUNTER_CLOCKWISE, MOTORA);
+    rotate(CLOCKWISE, MOTORB);
 }
 
 void MotorDriver::setSpeed(int8_t speed, uint8_t motorID) {
@@ -56,86 +38,32 @@ void MotorDriver::setSpeed(int8_t speed, uint8_t motorID) {
     }
 }
 
-void MotorDriver::setDirection(uint8_t direction, uint8_t motorID) {
-	if(motorID == MOTORA){
-        motorA.direction = direction;
-    }
-	else if(motorID == MOTORB) {
-        motorB.direction = direction;
-    }
-}
+void MotorDriver::rotate(uint8_t direction, uint8_t motorID) {
+	uint8_t in1_level = LOW;
+	uint8_t in2_level = LOW;
 
-/**********************************************************************/
-/*Function: Get the motor rotatingdd                                  	  */
-/*Parameter:-uint8_t direction,Clockwise or anticlockwise;            */
-/*          -uint8_t motor_position,MOTOR_POSITION_LEFT or			  */
-/*			MOTOR_POSITION_RIGHT;                      				  */
-/*Return:	void                      							      */
-void MotorDriver::rotate(uint8_t direction, uint8_t motor_position) {
-	if(motor_position == motorA.position)
-	{
-		rotateWithID(direction, MOTORA);
-	}
-	if(motor_position == motorB.position)
-	{
-		rotateWithID(direction, MOTORB);
-	}
-}
-/**********************************************************************/
-/*Function: Get the motor rotate                                  	  */
-/*Parameter:-uint8_t direction,Clockwise or anticlockwise;            */
-/*          -uint8_t motor_position,MOTORA or MOTORB				  */
-/*Return:	void                      							      */
-void MotorDriver::rotateWithID(uint8_t direction, uint8_t motorID) {
-	uint8_t in1_level, in2_level;
-	if(direction == MOTOR_CLOCKWISE) {
-		in1_level = LOW;
+	if(direction == CLOCKWISE) {
 		in2_level = HIGH;
 	}
 	else {
 		in1_level = HIGH;
-		in2_level = LOW;
 	}
+
 	if(motorID == MOTORA) {
 		analogWrite(SPEEDPIN_A, motorA.speed);
 		digitalWrite(MOTORSHIELD_IN1, in1_level);
      	digitalWrite(MOTORSHIELD_IN2, in2_level);
 	}
 	else if(motorID == MOTORB) {
-		analogWrite(SPEEDPIN_B,motorB.speed);
+		analogWrite(SPEEDPIN_B, motorB.speed);
 		digitalWrite(MOTORSHIELD_IN3, in1_level);
      	digitalWrite(MOTORSHIELD_IN4, in2_level);
 	}
 }
 
-void MotorDriver::goForward() {
-	rotate(MOTOR_ANTICLOCKWISE,MOTOR_POSITION_LEFT);
-	rotate(MOTOR_CLOCKWISE,MOTOR_POSITION_RIGHT);
-}
-void MotorDriver::goBackward() {
-	rotate(MOTOR_ANTICLOCKWISE,MOTOR_POSITION_RIGHT);
-	rotate(MOTOR_CLOCKWISE,MOTOR_POSITION_LEFT);
-}
-void MotorDriver::goLeft() {
-	rotate(MOTOR_CLOCKWISE,MOTOR_POSITION_RIGHT);
-	rotate(MOTOR_CLOCKWISE,MOTOR_POSITION_LEFT);
-}
-void MotorDriver::goRight() {
-	rotate(MOTOR_ANTICLOCKWISE,MOTOR_POSITION_RIGHT);
-	rotate(MOTOR_ANTICLOCKWISE,MOTOR_POSITION_LEFT);
-}
-
-/*************************************************************/
 void MotorDriver::stop() {
-	/*Unenble the pin, to stop the motor. */
 	digitalWrite(SPEEDPIN_A,LOW);
     digitalWrite(SPEEDPIN_B,LOW);
-}
-
-/*************************************************************/
-void MotorDriver::stop(uint8_t motorID) {
-	if(motorID == MOTORA)digitalWrite(SPEEDPIN_A,LOW);
-	else if(motorID == MOTORB)digitalWrite(SPEEDPIN_B,LOW);
 }
 
 MotorDriver motordriver;
