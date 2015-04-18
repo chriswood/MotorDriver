@@ -15,18 +15,26 @@ void MotorDriver::init() {
 	setSpeed(255, MOTORB);
 }
 
-int _getSpeedPin(uint8_t motorID) {
-	if(motorID == MOTORA) {
-		return(SPEEDPIN_A);
-	}
-	else {
-		return(SPEEDPIN_B);
-	}
-}
-
 void MotorDriver::forward() {
     rotate(COUNTER_CLOCKWISE, MOTORA);
     rotate(CLOCKWISE, MOTORB);
+}
+
+void MotorDriver::backward() {
+    rotate(CLOCKWISE, MOTORA);
+    rotate(COUNTER_CLOCKWISE, MOTORB);
+}
+
+void MotorDriver::rotateLeft() {
+	stop();
+	rotate(CLOCKWISE, MOTORA);
+	rotate(CLOCKWISE, MOTORB);
+}
+
+void MotorDriver::rotateRight() {
+	stop();
+	rotate(COUNTER_CLOCKWISE, MOTORA);
+	rotate(COUNTER_CLOCKWISE, MOTORB);
 }
 
 void MotorDriver::setSpeed(int8_t speed, uint8_t motorID) {

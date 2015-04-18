@@ -32,6 +32,9 @@ class MotorDriver
 public:
 	void init();
 	void forward();
+	void backward();
+	void rotateLeft();
+	void rotateRight();
 	void setSpeed(int8_t speed, uint8_t motorID);
 	void rotate(uint8_t direction, uint8_t motorID);
 	void stop();
